@@ -1,13 +1,14 @@
 from pieces.pieces import *
-from Square import Square
-
+from square import Square
+from colors import COLOR
+from move import Moves
 class Board(object):
-    startFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+    startFEN = "rnbqkbnr/pppppppp/8/8/5n2/8/PPPPPPPP/RNBQKBNR"
     def __init__(self) -> None:
         super().__init__()
         self.board = [[Square(x,y) for x in range(8)] for y in range(8)]
     def load_fen(self,fen):
-        color = lambda p : 'White' if p.islower() else 'Black'
+        color = lambda p : COLOR.White if p.islower() else COLOR.Black
         piece = {'p': Pawn,'n':Knight,'r':Rook, 'b':Bishop, 'q':Queen, 'k':King}
         row = 7
         col = 0
@@ -29,9 +30,9 @@ class Board(object):
         for row in self.board:
             for s in row:
                 if s.piece:
-                    out += str(s.piece) + "  "
+                    out += str(s.piece) + " "
                 else:
-                    out +=" "
+                    out +="  "
             out += "\n"
         return out
 
@@ -39,5 +40,12 @@ class Board(object):
 b = Board()
 b.load_fen(Board.startFEN)
 print(b)
+m = Moves(b.board)
+mv = m.generate_moves()
+for r in mv:
+    print(r ,mv[r])
 
-print(b.board[7][0].piece.color)
+for x,y in mv[3,5]:
+    b.board[x][y].piece = '.'
+
+print(b)
